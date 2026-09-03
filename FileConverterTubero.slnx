@@ -1,0 +1,7 @@
+<Solution>
+  <Configurations>
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Project Path="FileConverterTubero/FileConverterTubero.vcxproj" Id="b9d22a96-6024-4bc6-9568-b4ae40b6dffe" />
+</Solution>
