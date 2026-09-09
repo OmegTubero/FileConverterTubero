@@ -243,7 +243,7 @@ private:
 			return FreeImage_Clone(sorgente);
 		}
 
-		return FreeImage_Rescale(sorgente, targetW, targetH, FILTER_BICUBIC);
+		return FreeImage_Rescale(sorgente, targetW, targetH, FILTER_LANCZOS3);
 	}
 
 };

@@ -155,6 +155,15 @@
     <ClInclude Include="ImgConverter_xpm.hpp" />
     <ClInclude Include="Info.hpp" />
     <ClInclude Include="MainMenu.hpp" />
+    <ClInclude Include="resource.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="FileConverterTubero.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\..\..\SitoTubero\OmegTubero.ico" />
+    <Image Include="..\..\..\SitoTubero\OmegTubero.png" />
+    <Image Include="icon1.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

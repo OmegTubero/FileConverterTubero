@@ -35,5 +35,24 @@
     <ClInclude Include="ImgConverter_xpm.hpp">
       <Filter>File di intestazione</Filter>
     </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="FileConverterTubero.rc">
+      <Filter>File di risorse</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="icon1.ico">
+      <Filter>File di risorse</Filter>
+    </Image>
+    <Image Include="..\..\..\SitoTubero\OmegTubero.png">
+      <Filter>File di risorse</Filter>
+    </Image>
+    <Image Include="..\..\..\SitoTubero\OmegTubero.ico">
+      <Filter>File di risorse</Filter>
+    </Image>
   </ItemGroup>
 </Project>
