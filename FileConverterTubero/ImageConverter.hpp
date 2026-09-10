@@ -5,6 +5,10 @@
 #include <wx/stdpaths.h>
 #include <wx/filename.h>
 #include <FreeImage.h>
+#include <cstdio>
+#include <cstdlib>
+#include <fstream>
+#include <iostream>
 
 class ImageConverter : public wxDialog {
 public:
@@ -77,6 +81,8 @@ public:
 		btnConverterSelectFile->Bind(wxEVT_BUTTON, &ImageConverter::ApriFile, this);
 
 		btnConvert->Bind(wxEVT_BUTTON, &ImageConverter::Converti, this);
+
+		ConvertTo->Bind(wxEVT_CHOICE, &ImageConverter::CambiaDimensione, this);
 	}
 
 private:
@@ -84,6 +90,7 @@ private:
 	wxTextCtrl* SizeH = new wxTextCtrl(this, wxID_ANY, "", wxPoint(), wxSize(150, 25), 0, wxTextValidator(wxFILTER_NUMERIC)); // Casella di testo per la risoluzione verticale
 	wxChoice* ConvertTo; 
 	wxString InputPath; // Variabile per conservare il percorso del file letto
+	bool PressedAtLeastOnce = false;
 
 	FREE_IMAGE_FORMAT OttieniFormatoSorgente(const wxString& estensione) { // Funzione per ottenere il formato del file letto
 		wxString est = estensione.Upper();
@@ -99,6 +106,25 @@ private:
 		return FIF_UNKNOWN;
 	}
 
+	void CambiaDimensione(wxCommandEvent& event) { // Controllo della dimensione per il cambio dei valori nelle text box
+		if (PressedAtLeastOnce) {
+			FIBITMAP* ImmaginePerDimensioni = FreeImage_Load(FreeImage_GetFIFFromFilename(InputPath.mb_str()), InputPath.mb_str(), 0); // Creazione di una variaabile FITBITMAP
+
+			int Wi = FreeImage_GetWidth(ImmaginePerDimensioni);
+
+			int He = FreeImage_GetHeight(ImmaginePerDimensioni);
+
+			if (ConvertTo->GetStringSelection() == "ICO" && Wi * He > 65536) {
+				SizeW->SetValue(std::to_string(256));
+				SizeH->SetValue(std::to_string(256));
+			}
+			else {
+				SizeW->SetValue(std::to_string(FreeImage_GetWidth(ImmaginePerDimensioni)));
+				SizeH->SetValue(std::to_string(FreeImage_GetHeight(ImmaginePerDimensioni)));
+			}
+		}
+	}
+
 	void ApriFile(wxCommandEvent& event) { // Funzione di apertura del file immagine da manipolare
 		// Apro il file explorer per selezionare il file
 		wxFileDialog openFileDialog(this, "Seleziona Immagine", "", "", "Immagini (*.png;*.jpg;*.jpeg;*.webp;*.ico;*.bmp;*.tif;*.tiff;*.tga)|*.bmp;*.jpg;*.jpeg;*.png;*.tif;*.tiff;*.ico;*.tga;*.webp", wxFD_OPEN | wxFD_FILE_MUST_EXIST);
@@ -106,10 +132,23 @@ private:
 		if (openFileDialog.ShowModal() == wxID_OK) { // Se l'utente preme Ok mette il percorso del file nella variabile InputPath
 			InputPath = openFileDialog.GetPath();
 
+			PressedAtLeastOnce = true;
+
 			FIBITMAP* ImmaginePerDimensioni = FreeImage_Load(FreeImage_GetFIFFromFilename(InputPath.mb_str()), InputPath.mb_str(), 0); // Creazione di una variaabile FITBITMAP
+
+			int Wi = FreeImage_GetWidth(ImmaginePerDimensioni);
+
+			int He = FreeImage_GetHeight(ImmaginePerDimensioni);
+
 			// Prendo i valori di dimensione dalla variabile appena creata per assegnarli alle caselle di testo
-			SizeW->SetValue(std::to_string(FreeImage_GetWidth(ImmaginePerDimensioni)));
-			SizeH->SetValue(std::to_string(FreeImage_GetHeight(ImmaginePerDimensioni)));
+			if (ConvertTo->GetStringSelection() == "ICO" && Wi * He > 65536) {
+				SizeW->SetValue(std::to_string(256));
+				SizeH->SetValue(std::to_string(256));
+			}
+			else {
+				SizeW->SetValue(std::to_string(FreeImage_GetWidth(ImmaginePerDimensioni)));
+				SizeH->SetValue(std::to_string(FreeImage_GetHeight(ImmaginePerDimensioni)));
+			}
 		}
 	}
 
@@ -206,20 +245,24 @@ private:
 						wxMessageBox("Immagine convertita con successo" + OutputPath, "Completato", wxICON_INFORMATION);
 					}
 					else {
+						std::remove(OutputPath.mb_str());
 						wxMessageBox("Errore durante la scrittura del file convertito.", "Errore", wxICON_ERROR);
 					}
 
 				}
 				else {
+					std::remove(OutputPath.mb_str());
 					wxMessageBox("Impossibile allocare in memoria l'immagine originale.", "Errore", wxICON_ERROR);
 				}
 
 			}
 			else {
+				std::remove(OutputPath.mb_str());
 				wxMessageBox("Impossibile allocare in memoria l'immagine originale.", "Errore", wxICON_ERROR);
 			}
 		}
 		else {
+			std::remove(OutputPath.mb_str());
 			wxMessageBox("Formato del file originale non riconosciuto da FreeImage.", "Errore", wxICON_ERROR);
 		}
 	}

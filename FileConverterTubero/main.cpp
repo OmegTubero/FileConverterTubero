@@ -4,6 +4,9 @@
 class ConvertitoreTubero : public wxApp {
 	public:
 		virtual bool OnInit() {
+
+			FreeImage_Initialise();
+
 			MainWindow* Window = new MainWindow();
 
 			Window->Center();
