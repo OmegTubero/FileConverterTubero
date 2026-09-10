@@ -8,30 +8,27 @@
 
 class ImageConverter : public wxDialog {
 public:
-	ImageConverter(wxWindow* MainWindow) : wxDialog(MainWindow, wxID_ANY, "Convertitore Immagini", wxDefaultPosition, wxSize(800, 700)) {
+	ImageConverter(wxWindow* MainWindow) : wxDialog(MainWindow, wxID_ANY, "Conversione e scalatura immagini", wxDefaultPosition, wxSize(800, 700)) { // Creazione finestra principale del wxDialog
 
-		wxBoxSizer* ConverterSizerV = new wxBoxSizer(wxVERTICAL);
+		wxBoxSizer* ConverterSizerV = new wxBoxSizer(wxVERTICAL); // Creazione del sizer verticale
 
-		wxBoxSizer* ConverterSizerH = new wxBoxSizer(wxHORIZONTAL);
+		wxFont ConverterTextFont(20, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL); // Font per il ConverterText
 
-		wxFont ConverterTextFont(20, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
-
-		wxFont ConvertToTextFont(12, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
+		wxFont ConvertToTextFont(12, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL); // Font per le etichette
 
 		wxStaticText* ConverterText = new wxStaticText(this, wxID_ANY, "Converti o scala immagine");
 
 		wxStaticText* ConvertToText = new wxStaticText(this, wxID_ANY, "Converti in:");
 
-		wxButton* btnConverterSelectFile = new wxButton(this, wxID_ANY, "Seleziona file", wxPoint(), wxSize(120, 50));
+		wxButton* btnConverterSelectFile = new wxButton(this, wxID_ANY, "Seleziona file", wxPoint(), wxSize(120, 50)); // Tasto di selezione del file da convertire
 
 		wxStaticText* Larghezza = new wxStaticText(this, wxID_ANY, "Larghezza:");
 
 		wxStaticText* Altezza = new wxStaticText(this, wxID_ANY, "Altezza:");
 
+		wxButton* btnConvert = new wxButton(this, wxID_ANY, "Converti", wxPoint(), wxSize(120, 50)); // Tasto per avviare la conversione
 		
-
-		wxButton* btnConvert = new wxButton(this, wxID_ANY, "Converti", wxPoint(), wxSize(120, 50));
-
+		// Array per la drop down box con i formati
 		wxArrayString ConvertToFormats;
 		ConvertToFormats.Add("PNG");
 		ConvertToFormats.Add("JPG");
@@ -43,10 +40,10 @@ public:
 		ConvertToFormats.Add("TIFF");
 		ConvertToFormats.Add("TGA");
 
-		ConvertTo = new wxChoice(this, wxID_ANY, wxPoint(), wxSize(150, 30), ConvertToFormats);
+		ConvertTo = new wxChoice(this, wxID_ANY, wxPoint(), wxSize(150, 30), ConvertToFormats); // Choice per la selezione del formato di output della conversione
 
 		ConvertTo->SetSelection(0);
-
+		// Assegnazione dei font
 		ConverterText->SetFont(ConverterTextFont);
 
 		ConvertToText->SetFont(ConvertToTextFont);
@@ -55,8 +52,8 @@ public:
 
 		Larghezza->SetFont(ConvertToTextFont);
 
-		SetSizer(ConverterSizerV);
-
+		SetSizer(ConverterSizerV); // Impostazione sizer per la finestra
+		// Aggiunta dei vari elementi al sizer
 		ConverterSizerV->Add(ConverterText, 0, wxALIGN_CENTER_HORIZONTAL | wxALL, 5);
 
 		ConverterSizerV->Add(btnConverterSelectFile, 0, wxALIGN_CENTER_HORIZONTAL | wxTOP, 25);
@@ -74,21 +71,19 @@ public:
 		ConverterSizerV->Add(SizeH, 0, wxALIGN_CENTER_HORIZONTAL | wxTOP, 5);
 
 		ConverterSizerV->Add(btnConvert, 0, wxALIGN_CENTER_HORIZONTAL | wxTOP, 30);
-
-		ConverterSizerV->Add(ConverterSizerH, 0, wxALL, 5);
-
+		// Assegnazione eventi ai bottoni
 		btnConverterSelectFile->Bind(wxEVT_BUTTON, &ImageConverter::ApriFile, this);
 
 		btnConvert->Bind(wxEVT_BUTTON, &ImageConverter::Converti, this);
 	}
 
 private:
-	wxChoice* ConvertTo;
-	wxTextCtrl* SizeW = new wxTextCtrl(this, wxID_ANY, "", wxPoint(), wxSize(150, 25), 0, wxTextValidator(wxFILTER_NUMERIC));
-	wxTextCtrl* SizeH = new wxTextCtrl(this, wxID_ANY, "", wxPoint(), wxSize(150, 25), 0, wxTextValidator(wxFILTER_NUMERIC));
-	wxString InputPath;
+	wxTextCtrl* SizeW = new wxTextCtrl(this, wxID_ANY, "", wxPoint(), wxSize(150, 25), 0, wxTextValidator(wxFILTER_NUMERIC)); // Casella di testo per la risoluzione orrizontale
+	wxTextCtrl* SizeH = new wxTextCtrl(this, wxID_ANY, "", wxPoint(), wxSize(150, 25), 0, wxTextValidator(wxFILTER_NUMERIC)); // Casella di testo per la risoluzione verticale
+	wxChoice* ConvertTo; 
+	wxString InputPath; // Variabile per conservare il percorso del file letto
 
-	FREE_IMAGE_FORMAT OttieniFormatoSorgente(const wxString& estensione) {
+	FREE_IMAGE_FORMAT OttieniFormatoSorgente(const wxString& estensione) { // Funzione per ottenere il formato del file letto
 		wxString est = estensione.Upper();
 
 		if (est == "PNG") return FIF_PNG;
@@ -102,83 +97,86 @@ private:
 		return FIF_UNKNOWN;
 	}
 
-	void ApriFile(wxCommandEvent& event) { // Apertura del file immagine da manipolare
+	void ApriFile(wxCommandEvent& event) { // Funzione di apertura del file immagine da manipolare
+		// Apro il file explorer per selezionare il file
 		wxFileDialog openFileDialog(this, "Seleziona Immagine", "", "", "Immagini (*.png;*.jpg;*.jpeg;*.webp;*.ico;*.bmp;*.tif;*.tiff;*.tga)|*.bmp;*.jpg;*.jpeg;*.png;*.tif;*.tiff;*.ico;*.tga;*.webp", wxFD_OPEN | wxFD_FILE_MUST_EXIST);
 
-		if (openFileDialog.ShowModal() == wxID_OK) {
+		if (openFileDialog.ShowModal() == wxID_OK) { // Se l'utente preme Ok mette il percorso del file nella variabile InputPath
 			InputPath = openFileDialog.GetPath();
 
-			FIBITMAP* ImmaginePerDimensioni = FreeImage_Load(FreeImage_GetFIFFromFilename(InputPath.mb_str()), InputPath.mb_str(), 0);
-
+			FIBITMAP* ImmaginePerDimensioni = FreeImage_Load(FreeImage_GetFIFFromFilename(InputPath.mb_str()), InputPath.mb_str(), 0); // Creazione di una variaabile FITBITMAP
+			// Prendo i valori di dimensione dalla variabile appena creata per assegnarli alle caselle di testo
 			SizeW->SetValue(std::to_string(FreeImage_GetWidth(ImmaginePerDimensioni)));
 			SizeH->SetValue(std::to_string(FreeImage_GetHeight(ImmaginePerDimensioni)));
 		}
 	}
 
-	void Converti(wxCommandEvent& event) {
+	void Converti(wxCommandEvent& event) { // Funzione per la conversione del file immagine
 		if (InputPath.IsEmpty()) {
 			wxMessageBox("Seleziona prima un file da convertire", "Attenzione", wxICON_WARNING);
 			return;
 		}
 
-		int W = wxAtoi(SizeW->GetValue());
+		int W = wxAtoi(SizeW->GetValue()); // Effettuo la conversione da wsString a intero
 
 		int H = wxAtoi(SizeH->GetValue());
 
-		if (W && H <= 0) {
+		if (W && H <= 0) { // Controllo di validità della dimensione dell'immagine
 			wxMessageBox("La dimensione dell'immagine non puo' essere inferiore a 1x1", "Errore", wxICON_ERROR);
 			return;
 		}
 
-		wxString EstensioneScelta = ConvertTo->GetStringSelection();
+		wxString EstensioneScelta = ConvertTo->GetStringSelection(); // Prende la selezione dalla choice
 
-		if (EstensioneScelta == "ICO" && W*H > 65536) {
+		if (EstensioneScelta == "ICO" && W*H > 65536) { // Controllo se in caso si sia scelto di convertire in un file .ICO le dimensioni non siano superiori a 256x256
 			wxMessageBox("La dimensione di un file .ICO non puo' essere superiore a 256x256", "Errore", wxICON_ERROR);
 			return;
 		}
 
-		FREE_IMAGE_FORMAT FormatoOutput = OttieniFormatoSorgente(EstensioneScelta);
+		FREE_IMAGE_FORMAT FormatoOutput = OttieniFormatoSorgente(EstensioneScelta); // Creo una variaible di formato di FreeImage per potergli assegnare come valore l'estensione del file letto
 
-		if (FormatoOutput == FIF_UNKNOWN) {
+		if (FormatoOutput == FIF_UNKNOWN) { // Se il formato non è riconosciuto blocco la conversione
 			wxMessageBox("Formato di destinazione non supportato o non selezionato.", "Errore", wxICON_ERROR);
 			return;
 		}
 
-		wxFileName PercorsoEseguibile(wxStandardPaths::Get().GetExecutablePath());
-		wxString CartellaDestinazione = PercorsoEseguibile.GetPathWithSep() + "Conversioni";
+		wxFileName PercorsoEseguibile(wxStandardPaths::Get().GetExecutablePath()); // Creo una variabile wxFileName che scompone i percorsi dei file e gli assegno il percorso dell'eseguibile del programma
 
-		if (!wxDirExists(CartellaDestinazione)) {
+		wxString CartellaDestinazione = PercorsoEseguibile.GetPathWithSep() + "Conversioni"; // Assegno alla variabile il percorso e aggiungendo alla fine un \ con la funzione GetPathWithSep() il nome della cartella da creare o aprire
+
+		if (!wxDirExists(CartellaDestinazione)) { // Se la cartella non esiste viene creata
 
 			wxMkdir(CartellaDestinazione);
 		}
 
 		wxFileName GestoreInput(InputPath);
+
 		wxString NomeOriginale = GestoreInput.GetName();
 
 		wxFileName GestoreOutput;
 
-		GestoreOutput.SetPath(CartellaDestinazione);
+		GestoreOutput.SetPath(CartellaDestinazione); // Assegno il percorso di output alla variabile
 
-		GestoreOutput.SetName(NomeOriginale);
+		GestoreOutput.SetName(NomeOriginale); // Assegno il nome di output dell'immagine
 
-		GestoreOutput.SetExt(EstensioneScelta.Lower());
+		GestoreOutput.SetExt(EstensioneScelta.Lower()); // Assegno l'estensione di output scelta convertita in lowercase
 
-		wxString OutputPath = GestoreOutput.GetFullPath();
+		wxString OutputPath = GestoreOutput.GetFullPath(); // Assegno il percorso completo alla variabile OutputPath
 
-		FREE_IMAGE_FORMAT FormatoOrigine = FreeImage_GetFileType(InputPath.mb_str(), 0);
+		FREE_IMAGE_FORMAT FormatoOrigine = FreeImage_GetFileType(InputPath.mb_str(), 0); // Prendo il formato del file letto
 
 		if (FormatoOrigine == FIF_UNKNOWN) {
-			FormatoOrigine = FreeImage_GetFIFFromFilename(InputPath.mb_str());
+			FormatoOrigine = FreeImage_GetFIFFromFilename(InputPath.mb_str()); // Controllo dei byte per controllare la vera estensione del file
 		}
 
 		if (FormatoOrigine != FIF_UNKNOWN && FreeImage_FIFSupportsReading(FormatoOrigine)) {
 
-			FIBITMAP* ImmagineCaricata = FreeImage_Load(FormatoOrigine, InputPath.mb_str(), 0);
+			FIBITMAP* ImmagineCaricata = FreeImage_Load(FormatoOrigine, InputPath.mb_str(), 0); // Carico l'immagine in memoria
 
-			if (FormatoOutput == FIF_WEBP) {
+			if (FormatoOutput == FIF_WEBP) { // Controllo se è un WEBP
 				unsigned bpp = FreeImage_GetBPP(ImmagineCaricata);
 
-				if (bpp != 24 && bpp != 32) {
+				if (bpp != 24 && bpp != 32) { // Conversione della profondità a 32 o 24 bit per evitare il crash del programma
 					if (FreeImage_IsTransparent(ImmagineCaricata)) {
 						ImmagineCaricata = FreeImage_ConvertTo32Bits(ImmagineCaricata);
 					}
@@ -192,7 +190,7 @@ private:
 
 			int Altezza = wxAtoi(SizeH->GetValue());
 
-			ImmagineCaricata = RidimensionaImmagine(ImmagineCaricata, Larghezza, Altezza);
+			ImmagineCaricata = RidimensionaImmagine(ImmagineCaricata, Larghezza, Altezza); // Ridimensionamento imamgine con funzione apposita
 
 			if (ImmagineCaricata) {
 
@@ -203,7 +201,7 @@ private:
 					FreeImage_Unload(ImmagineCaricata);
 
 					if (successo) {
-						wxMessageBox("Immagine convertita e salvata con successo in:\n" + OutputPath, "Completato", wxICON_INFORMATION);
+						wxMessageBox("Immagine convertita con successo" + OutputPath, "Completato", wxICON_INFORMATION);
 					}
 					else {
 						wxMessageBox("Errore durante la scrittura del file convertito.", "Errore", wxICON_ERROR);
@@ -224,7 +222,7 @@ private:
 		}
 	}
 
-	FIBITMAP* RidimensionaImmagine(FIBITMAP* sorgente, int nuovaLarghezza, int nuovaAltezza, bool mantieniProporzioni = true) {
+	FIBITMAP* RidimensionaImmagine(FIBITMAP* sorgente, int nuovaLarghezza, int nuovaAltezza, bool mantieniProporzioni = true) { // Funzione per il ridimensionamento dell'immagine
 		if (!sorgente || nuovaLarghezza <= 0 || nuovaAltezza <= 0) return nullptr;
 
 		int larghezzaOriginale = FreeImage_GetWidth(sorgente);
@@ -233,17 +231,17 @@ private:
 		int targetW = nuovaLarghezza;
 		int targetH = nuovaAltezza;
 
-		if (mantieniProporzioni) {
+		if (mantieniProporzioni) { // Calcoli per mantenere le proporzioni dell'immagine
 			double rapporto = static_cast<double>(altezzaOriginale) / larghezzaOriginale;
 			targetH = static_cast<int>(nuovaLarghezza * rapporto);
 		}
 
 		
-		if (targetW == larghezzaOriginale && targetH == altezzaOriginale) {
+		if (targetW == larghezzaOriginale && targetH == altezzaOriginale) { // Se le dimensioni sono uguali si limita a effetture una copia dell'originale
 			return FreeImage_Clone(sorgente);
 		}
 
-		return FreeImage_Rescale(sorgente, targetW, targetH, FILTER_LANCZOS3);
+		return FreeImage_Rescale(sorgente, targetW, targetH, FILTER_LANCZOS3); // Scalamento dell'immagine con il LANCZOS3 per la qualità più alta
 	}
 
 };
