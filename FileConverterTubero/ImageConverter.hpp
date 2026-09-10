@@ -71,6 +71,8 @@ public:
 		ConverterSizerV->Add(SizeH, 0, wxALIGN_CENTER_HORIZONTAL | wxTOP, 5);
 
 		ConverterSizerV->Add(btnConvert, 0, wxALIGN_CENTER_HORIZONTAL | wxTOP, 30);
+		// Assegno il focus al tasto di selezione del file
+		btnConverterSelectFile->SetFocus();
 		// Assegnazione eventi ai bottoni
 		btnConverterSelectFile->Bind(wxEVT_BUTTON, &ImageConverter::ApriFile, this);
 
