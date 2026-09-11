@@ -1,0 +1,1 @@
+Hi everyone, i made this small piece of software that allows you to conver files from a format to another, at the moment it can only handle images allowing the users to both convert (it handles PNG, JPG, JPEG, WEBP, ICO, BMP, TIF, TIFF, TGA) and scale them at the same time, in the future i will add support for other files too, hope it helps yall.
