@@ -156,6 +156,8 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AudioConverter.hpp" />
+    <ClInclude Include="AudioConverter_xpm.hpp" />
     <ClInclude Include="FrierenCPP_xpm.hpp" />
     <ClInclude Include="ImageConverter.hpp" />
     <ClInclude Include="ImgConverter_xpm.hpp" />

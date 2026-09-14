@@ -183,11 +183,10 @@ private:
 
 		wxFileName PercorsoEseguibile(wxStandardPaths::Get().GetExecutablePath()); // Creo una variabile wxFileName che scompone i percorsi dei file e gli assegno il percorso dell'eseguibile del programma
 
-		wxString CartellaDestinazione = PercorsoEseguibile.GetPathWithSep() + "Conversioni"; // Assegno alla variabile il percorso e aggiungendo alla fine un \ con la funzione GetPathWithSep() il nome della cartella da creare o aprire
+		wxString CartellaDestinazione = PercorsoEseguibile.GetPathWithSep() + "Conversioni" + wxFileName::GetPathSeparator() + "Immagini"; // Assegno alla variabile il percorso e aggiungendo alla fine un \ con la funzione GetPathWithSep() il nome della cartella da creare o aprire
 
-		if (!wxDirExists(CartellaDestinazione)) { // Se la cartella non esiste viene creata
-
-			wxMkdir(CartellaDestinazione);
+		if (!wxDirExists(CartellaDestinazione)) { // Se la cartella non esiste la creo
+			wxFileName::Mkdir(CartellaDestinazione, wxS_DIR_DEFAULT, wxPATH_MKDIR_FULL);
 		}
 
 		wxFileName GestoreInput(InputPath);
@@ -242,7 +241,7 @@ private:
 					FreeImage_Unload(ImmagineCaricata);
 
 					if (successo) {
-						wxMessageBox("Immagine convertita con successo" + OutputPath, "Completato", wxICON_INFORMATION);
+						wxMessageBox("Immagine convertita con successo e salvato nella cartella Conversioni/Immagini presente nel percorso del programma", "Completato", wxICON_INFORMATION);
 					}
 					else {
 						std::remove(OutputPath.mb_str());

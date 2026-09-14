@@ -3,7 +3,9 @@
 #include <wx/wx.h>
 #include "Info.hpp"
 #include "ImageConverter.hpp"
+#include "AudioConverter.hpp"
 #include "ImgConverter_xpm.hpp"
+#include "AudioConverter_xpm.hpp"
 
 class MainWindow : public wxFrame {
 	public:
@@ -22,6 +24,8 @@ class MainWindow : public wxFrame {
 
 			wxButton* btnImgConverter = new wxButton(MainWindowPanel, wxID_ANY, "Converti o scala immagine", wxPoint(0, 50), wxSize(850, 80));
 
+			wxButton* btnAudioConverter = new wxButton(MainWindowPanel, wxID_ANY, "Converti audio", wxPoint(0, 50), wxSize(850, 80));
+
 			//wxStaticBitmap* ImgConverter = new wxStaticBitmap(MainWindowPanel, wxID_ANY, wxBitmap(FrierenCPP_xpm));
 
 			wxBitmap ImgConverterBitmap(ImgConverter_xpm);
@@ -31,6 +35,14 @@ class MainWindow : public wxFrame {
 			btnImgConverter->SetBitmapPosition(wxLEFT);
 
 			btnImgConverter->SetFont(ImgConverterFont);
+
+			wxBitmap AudioConverterBitmap(AudioConverter_xpm);
+
+			btnAudioConverter->SetBitmap(AudioConverterBitmap);
+
+			btnAudioConverter->SetBitmapPosition(wxLEFT);
+
+			btnAudioConverter->SetFont(ImgConverterFont);
 			
 			WelcomeText->SetFont(WelcomeTextFont);
 
@@ -38,11 +50,17 @@ class MainWindow : public wxFrame {
 
 			MainWindowSizer->Add(btnImgConverter, 0, wxALIGN_CENTER_HORIZONTAL | wxALL, 5);
 
+			MainWindowSizer->Add(btnAudioConverter, 0, wxALIGN_CENTER_HORIZONTAL | wxALL, 5);
+
 			btnInfo->Bind(wxEVT_BUTTON, &MainWindow::ShowInfo, this);
 
 			btnImgConverter->Bind(wxEVT_BUTTON, &MainWindow::OpenImgConverter, this);
 
+			btnAudioConverter->Bind(wxEVT_BUTTON, &MainWindow::OpenAudioConverter, this);
+
 			MainWindowPanel->SetSizer(MainWindowSizer);
+
+			btnInfo->SetFocus();
 		}
 	private:
 		void ShowInfo(wxCommandEvent& event) {
@@ -53,6 +71,12 @@ class MainWindow : public wxFrame {
 
 		void OpenImgConverter(wxCommandEvent& event) {
 			ImageConverter dlg(this);
+
+			dlg.ShowModal();
+		}
+
+		void OpenAudioConverter(wxCommandEvent& event) {
+			AudioConverter dlg(this);
 
 			dlg.ShowModal();
 		}

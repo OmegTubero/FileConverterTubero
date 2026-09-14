@@ -38,6 +38,12 @@
     <ClInclude Include="resource.h">
       <Filter>File di intestazione</Filter>
     </ClInclude>
+    <ClInclude Include="AudioConverter_xpm.hpp">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="AudioConverter.hpp">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="FileConverterTubero.rc">
